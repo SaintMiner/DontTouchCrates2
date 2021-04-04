@@ -11,6 +11,13 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerRigidBody = GetComponent<Rigidbody>();
+
+        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
+    }
+
+    private void GameManager_OnPlayerPickupTrigger(Pickup obj)
+    {
+        Debug.Log("Player Picked challenge");
     }
 
     private void FixedUpdate()

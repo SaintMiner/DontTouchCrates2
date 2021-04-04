@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,17 +14,28 @@ public class GameManager : Singleton<GameManager>
         PAUSED
     }
 
-    [SerializeField] List<GameObject> systemManagers;
+    [SerializeField] private List<GameObject> systemManagers;
 
-    List<GameObject> _intancedSystemManagers;
-    GameState _currentGameState;
+    private List<GameObject> _intancedSystemManagers;
+    private GameState _currentGameState;
+    private int _challengeCount;
+
+    public static event Action<Pickup> OnPlayerPickupTrigger;
 
     private void Start()
     {        
         _intancedSystemManagers = new List<GameObject>();
 
+        OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
+
         InstatiateSystemManagers();
-        StartGame();        
+        StartGame();
+    }
+
+    private void GameManager_OnPlayerPickupTrigger(Pickup obj)
+    {
+        _challengeCount++;
+        Debug.Log(_challengeCount);
     }
 
     private void Update()
@@ -52,8 +64,14 @@ public class GameManager : Singleton<GameManager>
 
     private void StartGame()
     {
+        _challengeCount = 0;
         _currentGameState = GameState.PREGAME;
         LevelManager.ChangeLevel("MainScene");
+    }
+
+    public static void TriggerPlayerPickuo(Pickup pickup)
+    {
+        OnPlayerPickupTrigger?.Invoke(pickup);
     }
 
 }
