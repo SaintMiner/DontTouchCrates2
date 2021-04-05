@@ -28,9 +28,15 @@ public class GameManager : Singleton<GameManager>
         _intancedSystemManagers = new List<GameObject>();
 
         OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
+        ChallengeManager.OnChallegeComplete += ChallengeManager_OnChallengeEnded;
 
         InstatiateSystemManagers();
         StartGame();
+    }
+
+    private void ChallengeManager_OnChallengeEnded(ChallengePickup.ChallengeType obj)
+    {
+        Debug.Log(obj);
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)

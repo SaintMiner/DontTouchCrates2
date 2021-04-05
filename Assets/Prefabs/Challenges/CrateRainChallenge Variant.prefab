@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e0a41dc9f3a6674495f91a693837002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cratePrefab: {fileID: 5651466813502589715, guid: ef151a05d496155408421fd41f981961, type: 3}
 --- !u!1001 &3607714294511009399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7801079719716170169, guid: 6f2496dc1c7ad1a47a38698a728487e2, type: 3}
       propertyPath: m_Name
-      value: CrateRainChallenge
+      value: CrateRainChallenge Variant
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7801079719716170167, guid: 6f2496dc1c7ad1a47a38698a728487e2, type: 3}

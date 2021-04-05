@@ -12,24 +12,16 @@ public class Pickup : MonoBehaviour
         EFFECT
     }
 
-    private void Start()
-    {        
-        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
-    }
-
-    private void GameManager_OnPlayerPickupTrigger(Pickup obj)
-    {        
-        if (obj._pickupType == PickupType.CHALLENGE)
-        {
-            gameObject.SetActive(false);
-        }
+    protected virtual void TriggeredByPlayer()
+    {
+        GameManager.TriggerPlayerPickup(this);
     }
 
     protected void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {            
-            GameManager.TriggerPlayerPickup(this);
+            TriggeredByPlayer();
         }
     }
 }

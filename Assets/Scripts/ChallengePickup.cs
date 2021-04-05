@@ -11,11 +11,27 @@ public class ChallengePickup : Pickup
         FALLING_CRATES,
         LAUCHING_CRATES
     }
-    
+    private void Start()
+    {
+        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
+        ChallengeManager.OnChallegeComplete += ChallengeManager_OnChallengeEnded;
+    }
+
+    private void ChallengeManager_OnChallengeEnded(ChallengeType obj)
+    {
+        gameObject.SetActive(true);
+    }
+
     private void OnEnable()
     {
         _challengeType = (ChallengeType)Random.Range(0, System.Enum.GetValues(typeof(ChallengeType)).Length);
         SetChallengeColor();        
+    }
+
+
+    private void GameManager_OnPlayerPickupTrigger(Pickup obj)
+    {
+        gameObject.SetActive(false);
     }
 
     private void SetChallengeColor()
@@ -32,9 +48,10 @@ public class ChallengePickup : Pickup
         }                
     }
 
-    private new void OnTriggerEnter(Collider other)
+    protected override void TriggeredByPlayer()
     {
-        base.OnTriggerEnter(other);
+        Debug.Log("Challenge pickUp triggered by player");
+        base.TriggeredByPlayer();
         ChallengeManager.Instance.ActivateChallenge(_challengeType);
     }
 }

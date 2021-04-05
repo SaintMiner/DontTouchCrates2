@@ -5,6 +5,17 @@ using UnityEngine;
 public class Challenge : MonoBehaviour
 {
     protected float _interval;
+    protected ChallengePickup.ChallengeType _challengeType;
+
+    public event System.Action<ChallengePickup.ChallengeType> OnChallengeEnd;
+
+    public ChallengePickup.ChallengeType ChanllengeType
+    {
+        get
+        {
+            return _challengeType;
+        }
+    }
 
     protected virtual void Awake()
     {
@@ -21,6 +32,7 @@ public class Challenge : MonoBehaviour
             yield return new WaitForSeconds(_interval);
             ChallengeAction();
         }
+        OnChallengeEnd?.Invoke(ChanllengeType);
         Destroy(gameObject);
     }
 
@@ -33,4 +45,5 @@ public class Challenge : MonoBehaviour
     {
         return false;
     }
+
 }

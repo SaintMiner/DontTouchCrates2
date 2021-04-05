@@ -5,24 +5,26 @@ using UnityEngine;
 public class CrateRainChallege : Challenge
 {
     [SerializeField] private GameObject _cratePrefab;
-    
+    [SerializeField] private int _baseCountToComplete = 10;
+    private int _countToComplete;
     private int _counter;
 
     protected override void Awake()
     {
+        _countToComplete = _baseCountToComplete + ChallengeManager.Instance.CompletedChallengeCount;
+        _challengeType = ChallengePickup.ChallengeType.FALLING_CRATES;
         _counter = 0;
-        _interval = 0.5f;        
+        _interval = 5f / _countToComplete;
     }
 
     protected override void ChallengeAction()
     {
-        Debug.Log("Crate Rain");
         _counter++;        
         Instantiate(_cratePrefab, ChallengeManager.GenerateSpawnPosition(), _cratePrefab.gameObject.transform.rotation);
     }
 
     protected override bool ChallengeCondition()
     {
-        return _counter <= 10;
+        return _counter <= _countToComplete;
     }
 }

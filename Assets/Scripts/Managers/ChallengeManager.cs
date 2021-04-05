@@ -8,10 +8,21 @@ public class ChallengeManager : Singleton<ChallengeManager>
     [SerializeField] private MeshRenderer _spawnArea;
     private List<Challenge> _activeChallenges;
     private Vector3 _spawnAreaBound;
-    // Start is called before the first frame update
+    private int _completedChallengeCount;
+
+    public int CompletedChallengeCount
+    {
+        get
+        {
+            return _completedChallengeCount;
+        }
+    }
+
+    public static event System.Action<ChallengePickup.ChallengeType> OnChallegeComplete;
 
     protected override void Awake()
     {
+        _completedChallengeCount = 0;
         _persistent = false;
         _activeChallenges = new List<Challenge>();
         _spawnAreaBound = GetSpawnAreaBound();
@@ -21,7 +32,14 @@ public class ChallengeManager : Singleton<ChallengeManager>
     public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
     {
         Debug.Log($"Activating challenge {challengeType}");
-        Instantiate(_challengePrefab);
+        Challenge challenge = Instantiate(_challengePrefab).GetComponent<Challenge>();
+        challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
+    }
+
+    private void Challenge_OnChallengeEnd(ChallengePickup.ChallengeType challengeType)
+    {
+        _completedChallengeCount++;
+        OnChallegeComplete?.Invoke(challengeType);
     }
 
     private Vector3 GetSpawnAreaBound()
