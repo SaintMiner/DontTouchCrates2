@@ -25,11 +25,11 @@ public class Pickup : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {            
-            GameManager.TriggerPlayerPickuo(this);
+            GameManager.TriggerPlayerPickup(this);
         }
     }
 }

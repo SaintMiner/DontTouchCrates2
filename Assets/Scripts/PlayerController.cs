@@ -13,6 +13,12 @@ public class PlayerController : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody>();
 
         GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
+        GameManager.OnPlayerCrateTouch += GameManager_OnPlayerCrateTouch;
+    }
+
+    private void GameManager_OnPlayerCrateTouch()
+    {
+        Destroy(gameObject);
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)
@@ -24,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         MovePlayer();
     }
-
+        
     public void MovePlayer()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
@@ -33,5 +39,13 @@ public class PlayerController : MonoBehaviour
 
         playerRigidBody.AddForce(direction);
         playerRigidBody.angularVelocity *= 0.9f;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Crate"))
+        {
+            GameManager.TriggerPlayerCrateTouch();
+        }
     }
 }

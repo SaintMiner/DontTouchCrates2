@@ -21,6 +21,7 @@ public class GameManager : Singleton<GameManager>
     private int _challengeCount;
 
     public static event Action<Pickup> OnPlayerPickupTrigger;
+    public static event Action OnPlayerCrateTouch;
 
     private void Start()
     {        
@@ -69,9 +70,14 @@ public class GameManager : Singleton<GameManager>
         LevelManager.ChangeLevel("MainScene");
     }
 
-    public static void TriggerPlayerPickuo(Pickup pickup)
+    public static void TriggerPlayerPickup(Pickup pickup)
     {
         OnPlayerPickupTrigger?.Invoke(pickup);
+    }
+
+    public static void TriggerPlayerCrateTouch()
+    {
+        OnPlayerCrateTouch?.Invoke();
     }
 
 }

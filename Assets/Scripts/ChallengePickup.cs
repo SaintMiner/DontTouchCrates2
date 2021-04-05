@@ -11,7 +11,7 @@ public class ChallengePickup : Pickup
         FALLING_CRATES,
         LAUCHING_CRATES
     }
-
+    
     private void OnEnable()
     {
         _challengeType = (ChallengeType)Random.Range(0, System.Enum.GetValues(typeof(ChallengeType)).Length);
@@ -23,14 +23,18 @@ public class ChallengePickup : Pickup
         switch (_challengeType)
         {
             case ChallengeType.FALLING_CRATES:
-                _challengeRenderer.material.color = Color.cyan;
+                _challengeRenderer.material.color = Color.cyan;                
                 break;
 
             case ChallengeType.LAUCHING_CRATES:
-                _challengeRenderer.material.color = Color.green;
+                _challengeRenderer.material.color = Color.green;                
                 break;
-        }
-        
-        
+        }                
+    }
+
+    private new void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+        ChallengeManager.Instance.ActivateChallenge(_challengeType);
     }
 }
