@@ -18,4 +18,9 @@ public class Crate : MonoBehaviour
         _crateRigidBody.AddTorque(cross * angleDiff * _speed);
     }
 
+    private void OnDisable()
+    {
+        _crateRigidBody.angularVelocity = _crateRigidBody.velocity = Vector3.zero;
+    }
+
 }

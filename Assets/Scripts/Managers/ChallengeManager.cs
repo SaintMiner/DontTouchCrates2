@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChallengeManager : Singleton<ChallengeManager>
-{    
+{
+    [SerializeField] private ObjectPool _cratePool;
     [SerializeField] private GameObject _challengePrefab;
     [SerializeField] private MeshRenderer _spawnArea;
     private List<Challenge> _activeChallenges;
@@ -20,6 +21,22 @@ public class ChallengeManager : Singleton<ChallengeManager>
 
     public static event System.Action<ChallengePickup.ChallengeType> OnChallegeComplete;
 
+    public void SpawnCrate()
+    {
+        GameObject crate = _cratePool.GetPooledObject();
+        if (crate != null)
+        {
+            crate.transform.position = GenerateSpawnPosition();
+            crate.SetActive(true);
+        }
+    }
+    public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
+    {
+        Debug.Log($"Activating challenge {challengeType}");
+        Challenge challenge = Instantiate(_challengePrefab).GetComponent<Challenge>();
+        challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
+    }
+
     protected override void Awake()
     {
         _completedChallengeCount = 0;
@@ -29,12 +46,6 @@ public class ChallengeManager : Singleton<ChallengeManager>
         base.Awake();
     }
 
-    public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
-    {
-        Debug.Log($"Activating challenge {challengeType}");
-        Challenge challenge = Instantiate(_challengePrefab).GetComponent<Challenge>();
-        challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
-    }
 
     private void Challenge_OnChallengeEnd(ChallengePickup.ChallengeType challengeType)
     {
@@ -47,7 +58,7 @@ public class ChallengeManager : Singleton<ChallengeManager>
         return _spawnArea.bounds.extents;
     }
 
-    public static Vector3 GenerateSpawnPosition()
+    private static Vector3 GenerateSpawnPosition()
     {
         float crateRangeX = Instance._spawnAreaBound.x;
         float crateRangeZ = Instance._spawnAreaBound.z;
@@ -60,4 +71,5 @@ public class ChallengeManager : Singleton<ChallengeManager>
 
         return spawnPos;
     }
+    
 }

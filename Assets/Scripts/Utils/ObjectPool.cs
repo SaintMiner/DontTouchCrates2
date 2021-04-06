@@ -6,8 +6,10 @@ public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool sharedInstance;
     public List<GameObject> pooledObjects;
-    public GameObject objectToPool;
-    public int amountToPool;
+
+    [SerializeField] private GameObject objectToPool;
+    [SerializeField] private int amountToPool;
+    [SerializeField] private bool shouldExpand = true;
 
     private void Awake()
     {
@@ -24,5 +26,26 @@ public class ObjectPool : MonoBehaviour
             tmp.SetActive(false);
             pooledObjects.Add(tmp);
         }
+    }
+
+    public GameObject GetPooledObject()
+    {
+        for (int i = 0; i < pooledObjects.Count; i++)
+        {
+            if (!pooledObjects[i].activeInHierarchy)
+            {
+                return pooledObjects[i];
+            }
+        }
+
+        if (shouldExpand)
+        {
+            GameObject pooledObject = (GameObject)Instantiate(objectToPool);
+            pooledObject.SetActive(false);
+            pooledObjects.Add(pooledObject);
+            return pooledObject;
+        }
+        
+        return null;
     }
 }

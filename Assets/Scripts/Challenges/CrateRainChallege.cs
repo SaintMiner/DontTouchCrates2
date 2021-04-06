@@ -19,12 +19,12 @@ public class CrateRainChallege : Challenge
 
     protected override void ChallengeAction()
     {
-        _counter++;        
-        Instantiate(_cratePrefab, ChallengeManager.GenerateSpawnPosition(), _cratePrefab.gameObject.transform.rotation);
+        _counter++;
+        ChallengeManager.Instance.SpawnCrate();
     }
 
     protected override bool ChallengeCondition()
     {
-        return _counter <= _countToComplete;
+        return _counter < _countToComplete;
     }
 }
