@@ -8,7 +8,7 @@ public class ChallengePickup : Pickup
     [SerializeField] private ChallengeType _challengeType;
     public enum ChallengeType
     {
-        FALLING_CRATES,
+        CRATE_RAIN,
         LAUCHING_CRATES
     }
     private void Start()
@@ -38,7 +38,7 @@ public class ChallengePickup : Pickup
     {        
         switch (_challengeType)
         {
-            case ChallengeType.FALLING_CRATES:
+            case ChallengeType.CRATE_RAIN:
                 _challengeRenderer.material.color = Color.cyan;                
                 break;
 

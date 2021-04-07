@@ -8,17 +8,13 @@ public class PlayerController : MonoBehaviour
     public float speed;
     Rigidbody playerRigidBody;
 
+    public event Action OnPlayerLose;
+
     private void Start()
     {
         playerRigidBody = GetComponent<Rigidbody>();
 
-        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
-        GameManager.OnPlayerCrateTouch += GameManager_OnPlayerCrateTouch;
-    }
-
-    private void GameManager_OnPlayerCrateTouch()
-    {
-        Destroy(gameObject);
+        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;        
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)
@@ -45,7 +41,13 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Crate"))
         {
+            gameObject.SetActive(false);
             GameManager.TriggerPlayerCrateTouch();
         }
+    }
+
+    private void OnDisable()
+    {
+        OnPlayerLose?.Invoke();
     }
 }

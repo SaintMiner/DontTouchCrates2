@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Challenge : MonoBehaviour
-{      
+{
+    protected int _points;
     protected float _interval;
     protected ChallengePickup.ChallengeType _challengeType;
 

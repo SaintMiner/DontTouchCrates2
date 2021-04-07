@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool sharedInstance;
-    public List<GameObject> pooledObjects;
+    public List<MonoBehaviour> pooledObjects;
 
     [SerializeField] private GameObject objectToPool;
     [SerializeField] private int amountToPool;
@@ -16,36 +16,41 @@ public class ObjectPool : MonoBehaviour
         sharedInstance = this;
     }
 
-    private void Start()
+    public void FillPool<T>() where T : MonoBehaviour
     {
-        pooledObjects = new List<GameObject>();
+        pooledObjects = new List<MonoBehaviour>();
         GameObject tmp;
-        for(int i = 0; i < amountToPool; i++)
+
+        for (int i = 0; i < amountToPool; i++)
         {
+
             tmp = Instantiate(objectToPool);
             tmp.SetActive(false);
-            pooledObjects.Add(tmp);
-        }
+            pooledObjects.Add(tmp.GetComponent<T>());
+        }            
     }
 
-    public GameObject GetPooledObject()
+    public T GetPooledObject<T>() where T : MonoBehaviour
     {
+
         for (int i = 0; i < pooledObjects.Count; i++)
         {
-            if (!pooledObjects[i].activeInHierarchy)
+            if (!pooledObjects[i].gameObject.activeInHierarchy)
             {
-                return pooledObjects[i];
+                Debug.Log(pooledObjects[i]);
+                return (T)pooledObjects[i];
             }
         }
 
         if (shouldExpand)
         {
-            GameObject pooledObject = (GameObject)Instantiate(objectToPool);
+            GameObject pooledObject = (GameObject)Instantiate(objectToPool.gameObject);
             pooledObject.SetActive(false);
-            pooledObjects.Add(pooledObject);
-            return pooledObject;
+            T behavior = pooledObject.GetComponent<T>();
+            pooledObjects.Add(behavior);
+            return behavior;
         }
-        
+
         return null;
     }
 }

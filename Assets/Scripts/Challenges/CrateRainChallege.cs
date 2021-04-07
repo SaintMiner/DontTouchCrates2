@@ -12,15 +12,16 @@ public class CrateRainChallege : Challenge
     protected override void Awake()
     {
         _countToComplete = _baseCountToComplete + ChallengeManager.Instance.CompletedChallengeCount;
-        _challengeType = ChallengePickup.ChallengeType.FALLING_CRATES;
+        _challengeType = ChallengePickup.ChallengeType.CRATE_RAIN;
         _counter = 0;
+        _points = 100;
         _interval = 5f / _countToComplete;
     }
 
     protected override void ChallengeAction()
     {
         _counter++;
-        ChallengeManager.Instance.SpawnCrate();
+        ChallengeManager.Instance.SpawnCrate(_challengeType);
     }
 
     protected override bool ChallengeCondition()

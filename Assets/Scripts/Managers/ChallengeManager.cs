@@ -21,13 +21,31 @@ public class ChallengeManager : Singleton<ChallengeManager>
 
     public static event System.Action<ChallengePickup.ChallengeType> OnChallegeComplete;
 
-    public void SpawnCrate()
+    protected override void Awake()
     {
-        GameObject crate = _cratePool.GetPooledObject();
-        if (crate != null)
+        _completedChallengeCount = 0;
+        _persistent = false;
+        _activeChallenges = new List<Challenge>();
+        _spawnAreaBound = GetSpawnAreaBound();
+        base.Awake();
+
+        _cratePool.FillPool<Crate>();
+    }
+
+
+    public void SpawnCrate(ChallengePickup.ChallengeType challengeType)
+    {
+        Crate crate = _cratePool.GetPooledObject<Crate>();        
+
+        switch (challengeType)
         {
-            crate.transform.position = GenerateSpawnPosition();
-            crate.SetActive(true);
+            case ChallengePickup.ChallengeType.CRATE_RAIN:
+                Debug.Log(crate);
+                Debug.Log(crate.gameObject);
+                crate.gameObject.transform.position = GenerateSpawnPosition();
+                crate.gameObject.SetActive(true);
+                crate.ChallengeRainCrate();
+                break;
         }
     }
     public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
@@ -37,14 +55,6 @@ public class ChallengeManager : Singleton<ChallengeManager>
         challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
     }
 
-    protected override void Awake()
-    {
-        _completedChallengeCount = 0;
-        _persistent = false;
-        _activeChallenges = new List<Challenge>();
-        _spawnAreaBound = GetSpawnAreaBound();
-        base.Awake();
-    }
 
 
     private void Challenge_OnChallengeEnd(ChallengePickup.ChallengeType challengeType)
