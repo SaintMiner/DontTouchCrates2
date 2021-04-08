@@ -1296,6 +1296,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1282579186, guid: 69236017a180c61488b877b8a6816a4c, type: 3}
+      propertyPath: _challengeType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8434229156058128737, guid: 69236017a180c61488b877b8a6816a4c, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -1533,8 +1537,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cratePool: {fileID: 621867780}
-  _challengePrefab: {fileID: 6796544974772164558, guid: d1f859d91b08193459f28d029ce331b8, type: 3}
   _spawnArea: {fileID: 324292972}
+  _crateRainChallengeCrateRainPrefab: {fileID: 6796544974772164558, guid: d1f859d91b08193459f28d029ce331b8, type: 3}
+  _launchingCratesChallengePrefab: {fileID: 2754231359196106426, guid: cf94f4145985f48448a64d8f650d274e, type: 3}
 --- !u!4 &750715953
 Transform:
   m_ObjectHideFlags: 0

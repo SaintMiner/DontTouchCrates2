@@ -7,11 +7,6 @@ public class Crate : MonoBehaviour
     [SerializeField] private Rigidbody _crateRigidBody;
     [SerializeField] private float _speed = 1f;
 
-    private void OnDisable()
-    {
-        _crateRigidBody.angularVelocity = _crateRigidBody.velocity = Vector3.zero;
-    }
-
     public void ChallengeRainCrate()
     {
         GameObject targetObject = Platform.RandomActivePart();
@@ -30,4 +25,20 @@ public class Crate : MonoBehaviour
         _crateRigidBody.AddTorque(cross * angleDiff * _speed);
     }
 
+    public void ChallengeLauchCrate()
+    {
+        Vector3 cratePost = transform.position;
+        Vector3 target = new Vector3(-cratePost.x, cratePost.y, 0);
+        Debug.Log(transform.position);
+        Debug.Log(target);
+        Vector3 targetPosition = (target) * _speed;
+
+        _crateRigidBody.AddForce(targetPosition);
+        _crateRigidBody.AddTorque(Random.rotation.eulerAngles);
+    }
+
+    private void OnDisable()
+    {
+        _crateRigidBody.angularVelocity = _crateRigidBody.velocity = Vector3.zero;
+    }
 }

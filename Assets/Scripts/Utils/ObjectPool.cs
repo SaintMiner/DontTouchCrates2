@@ -37,7 +37,6 @@ public class ObjectPool : MonoBehaviour
         {
             if (!pooledObjects[i].gameObject.activeInHierarchy)
             {
-                Debug.Log(pooledObjects[i]);
                 return (T)pooledObjects[i];
             }
         }

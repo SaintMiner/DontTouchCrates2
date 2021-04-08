@@ -5,11 +5,13 @@ using UnityEngine;
 public class ChallengeManager : Singleton<ChallengeManager>
 {
     [SerializeField] private ObjectPool _cratePool;
-    [SerializeField] private GameObject _challengePrefab;
     [SerializeField] private MeshRenderer _spawnArea;
     private List<Challenge> _activeChallenges;
-    private Vector3 _spawnAreaBound;
+    private Vector3 _topSpawnAreaBound;
     private int _completedChallengeCount;
+
+    [SerializeField] private GameObject _crateRainChallengeCrateRainPrefab;
+    [SerializeField] private GameObject _launchingCratesChallengePrefab;
 
     public int CompletedChallengeCount
     {
@@ -26,7 +28,7 @@ public class ChallengeManager : Singleton<ChallengeManager>
         _completedChallengeCount = 0;
         _persistent = false;
         _activeChallenges = new List<Challenge>();
-        _spawnAreaBound = GetSpawnAreaBound();
+        _topSpawnAreaBound = GetSpawnAreaBound();
         base.Awake();
 
         _cratePool.FillPool<Crate>();
@@ -40,19 +42,32 @@ public class ChallengeManager : Singleton<ChallengeManager>
         switch (challengeType)
         {
             case ChallengePickup.ChallengeType.CRATE_RAIN:
-                Debug.Log(crate);
-                Debug.Log(crate.gameObject);
-                crate.gameObject.transform.position = GenerateSpawnPosition();
+                crate.gameObject.transform.position = GenerateTopSpawnPosition();
                 crate.gameObject.SetActive(true);
                 crate.ChallengeRainCrate();
+                break;
+            case ChallengePickup.ChallengeType.LAUCHING_CRATES:
+                crate.gameObject.transform.position = GenerateSideSpawnPosition();
+                crate.gameObject.SetActive(true);
+                crate.ChallengeLauchCrate();
                 break;
         }
     }
     public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
     {
         Debug.Log($"Activating challenge {challengeType}");
-        Challenge challenge = Instantiate(_challengePrefab).GetComponent<Challenge>();
-        challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
+        Challenge challenge;
+        switch (challengeType)
+        {
+            case ChallengePickup.ChallengeType.CRATE_RAIN:
+                challenge = Instantiate(_crateRainChallengeCrateRainPrefab).GetComponent<Challenge>();
+                challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
+                break;
+            case ChallengePickup.ChallengeType.LAUCHING_CRATES:
+                challenge = Instantiate(_launchingCratesChallengePrefab).GetComponent<Challenge>();
+                challenge.OnChallengeEnd += Challenge_OnChallengeEnd;
+                break;
+        }
     }
 
 
@@ -68,10 +83,10 @@ public class ChallengeManager : Singleton<ChallengeManager>
         return _spawnArea.bounds.extents;
     }
 
-    private static Vector3 GenerateSpawnPosition()
+    private static Vector3 GenerateTopSpawnPosition()
     {
-        float crateRangeX = Instance._spawnAreaBound.x;
-        float crateRangeZ = Instance._spawnAreaBound.z;
+        float crateRangeX = Instance._topSpawnAreaBound.x;
+        float crateRangeZ = Instance._topSpawnAreaBound.z;
 
         float cratePosX = Random.Range(-crateRangeX, crateRangeX);
         float cratePosZ = Random.Range(-crateRangeZ, crateRangeZ);
@@ -81,5 +96,19 @@ public class ChallengeManager : Singleton<ChallengeManager>
 
         return spawnPos;
     }
-    
+
+    private static Vector3 GenerateSideSpawnPosition()
+    {
+        float boundX = 50;
+        float boundZ = 7;
+
+        float cratePosX = UnityEngine.Random.value < 0.5f ? boundX : -boundX;
+        float cratePosZ = Random.Range(-boundZ, boundZ);
+        float cratePosY = 1f;
+
+        Vector3 spawnPos = new Vector3(cratePosX, cratePosY, cratePosZ);
+
+        return spawnPos;
+    }
+
 }

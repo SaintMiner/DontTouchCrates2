@@ -36,13 +36,11 @@ public class GameManager : Singleton<GameManager>
 
     private void ChallengeManager_OnChallengeEnded(ChallengePickup.ChallengeType obj)
     {
-        Debug.Log(obj);
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)
     {
         _challengeCount++;
-        Debug.Log(_challengeCount);
     }
 
     private void Update()

@@ -50,6 +50,7 @@ public class ChallengePickup : Pickup
 
     protected override void TriggeredByPlayer()
     {
+        Debug.Log(_challengeType);
         Debug.Log("Challenge pickUp triggered by player");
         base.TriggeredByPlayer();
         ChallengeManager.Instance.ActivateChallenge(_challengeType);
