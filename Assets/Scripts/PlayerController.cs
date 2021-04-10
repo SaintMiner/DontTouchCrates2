@@ -1,19 +1,21 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
-    Rigidbody playerRigidBody;
-
-    public event Action OnPlayerLose;
-
+    [SerializeField] private LayerMask platformLayerMask;
+    [SerializeField] private float _acceleration;
+    [SerializeField] private float _maxSpeed = 10f;
+    private Rigidbody playerRigidBody;
+    private SphereCollider playerCollider;
+    private bool isGrounded;
+    public event System.Action OnPlayerLose;
+    
     private void Start()
     {
         playerRigidBody = GetComponent<Rigidbody>();
-
+        playerCollider = GetComponent<SphereCollider>();
         GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;        
     }
 
@@ -22,19 +24,35 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player Picked challenge");
     }
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+            Vector3 direction = Vector3.up * 0.5f + playerRigidBody.velocity.normalized;
+            playerRigidBody.AddForce(direction * _acceleration, ForceMode.Impulse);
+        }
+    }
+
     private void FixedUpdate()
     {
         MovePlayer();
     }
         
-    public void MovePlayer()
+    private void MovePlayer()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(moveHorizontal * speed, 0.0f, moveVertical * speed);
+        if (isGrounded) {
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
+            Vector3 direction = new Vector3(moveHorizontal * _acceleration, 0.0f, moveVertical * _acceleration);
 
-        playerRigidBody.AddForce(direction);
+            playerRigidBody.AddForce(direction);
+        }
+        
+        if (playerRigidBody.velocity.magnitude > _maxSpeed)
+        {
+            playerRigidBody.velocity = Vector3.ClampMagnitude(playerRigidBody.velocity, _maxSpeed * 1.5f);
+        }
+
         playerRigidBody.angularVelocity *= 0.9f;
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,4 +68,15 @@ public class PlayerController : MonoBehaviour
     {
         OnPlayerLose?.Invoke();
     }
+
+    private void OnCollisionStay(Collision other) {
+        if (other.gameObject.CompareTag("Platform Part")) {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision other) {
+        isGrounded = false;
+    }
+
 }

@@ -29,8 +29,6 @@ public class Crate : MonoBehaviour
     {
         Vector3 cratePost = transform.position;
         Vector3 target = new Vector3(-cratePost.x, cratePost.y, 0);
-        Debug.Log(transform.position);
-        Debug.Log(target);
         Vector3 targetPosition = (target) * _speed;
 
         _crateRigidBody.AddForce(targetPosition);

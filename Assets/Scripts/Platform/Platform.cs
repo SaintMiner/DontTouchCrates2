@@ -9,6 +9,12 @@ public class Platform : Singleton<Platform>
     protected override void Awake()
     {
         _persistent = false;
+
+        foreach (GameObject child in _parts)
+        {
+            child.tag = gameObject.tag;
+        }
+
         base.Awake();
     }
 

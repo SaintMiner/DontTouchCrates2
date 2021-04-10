@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
     {
         _challengeCount = 0;
         _currentGameState = GameState.PREGAME;
-        LevelManager.ChangeLevel("MainScene");
+        StartCoroutine(LevelManager.ChangeLevel("MainScene"));
     }
 
     public static void TriggerPlayerPickup(Pickup pickup)

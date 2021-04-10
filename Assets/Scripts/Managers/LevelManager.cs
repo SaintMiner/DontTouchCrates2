@@ -7,15 +7,35 @@ public class LevelManager : Singleton<LevelManager>
 {
     string _currentLevelName = string.Empty;    
 
-    public void LoadLevel(string levelName)
+    public IEnumerator LoadLevel(string levelName)
     {
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
 
         if (asyncOperation == null)
         {
             Debug.LogError($"[LevelManager] Unable to load level {levelName}");
-            return;
+            yield break;
         }        
+
+        asyncOperation.allowSceneActivation = false;
+        while (!asyncOperation.isDone)
+        {
+            //Output the current progress
+            // m_Text.text = "Loading progress: " + (asyncOperation.progress * 100) + "%";
+
+            // Check if the load has finished
+            if (asyncOperation.progress >= 0.9f)
+            {
+                //Change the Text to show the Scene is ready
+                // m_Text.text = "Press the space bar to continue";
+                //Wait to you press the space key to activate the Scene
+                if (Input.GetKeyDown(KeyCode.Space))
+                    //Activate the Scene
+                    asyncOperation.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
         
         _currentLevelName = levelName;
         Debug.Log(_currentLevelName);        
@@ -33,14 +53,15 @@ public class LevelManager : Singleton<LevelManager>
         Debug.Log(_currentLevelName);
     }
 
-    public static void ChangeLevel(string levelName)
+    public static IEnumerator ChangeLevel(string levelName)
     {
-        if (Instance._currentLevelName != string.Empty)
-        {
-            Instance.UnloadLevel(Instance._currentLevelName);
-        }
+        // if (Instance._currentLevelName != string.Empty)
+        // {
+        //     Instance.UnloadLevel(Instance._currentLevelName);
+        // }
 
-        Instance.LoadLevel(levelName);
+        Instance.StartCoroutine(Instance.LoadLevel(levelName));
+        yield return 0;
     }
 
 
