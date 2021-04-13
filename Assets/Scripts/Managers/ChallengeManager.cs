@@ -55,7 +55,6 @@ public class ChallengeManager : Singleton<ChallengeManager>
     }
     public void ActivateChallenge(ChallengePickup.ChallengeType challengeType)
     {
-        Debug.Log($"Activating challenge {challengeType}");
         Challenge challenge;
         switch (challengeType)
         {

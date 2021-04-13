@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>
     private List<GameObject> _intancedSystemManagers;
     private GameState _currentGameState;
     private int _challengeCount;
+    private int _points;
 
     public static event Action<Pickup> OnPlayerPickupTrigger;
     public static event Action OnPlayerCrateTouch;
@@ -36,11 +37,26 @@ public class GameManager : Singleton<GameManager>
 
     private void ChallengeManager_OnChallengeEnded(ChallengePickup.ChallengeType obj)
     {
+        int gettingPoints = 0;
+        switch(obj) {
+            case ChallengePickup.ChallengeType.CRATE_RAIN:
+                gettingPoints = 100;
+                break;
+            case ChallengePickup.ChallengeType.LAUCHING_CRATES:
+                gettingPoints = 150;
+                break;
+        }
+        _points += gettingPoints * _challengeCount;
+        Debug.Log(_points);
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)
     {
         _challengeCount++;
+    }
+
+    public void GameManager_OnPlayerLose() {
+        
     }
 
     private void Update()
@@ -69,7 +85,7 @@ public class GameManager : Singleton<GameManager>
 
     private void StartGame()
     {
-        _challengeCount = 0;
+        _points = _challengeCount = 0;
         _currentGameState = GameState.PREGAME;
         StartCoroutine(LevelManager.ChangeLevel("MainScene"));
     }

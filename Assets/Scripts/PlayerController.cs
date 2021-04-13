@@ -16,12 +16,11 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidBody = GetComponent<Rigidbody>();
         playerCollider = GetComponent<SphereCollider>();
-        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;        
+        GameManager.OnPlayerPickupTrigger += GameManager_OnPlayerPickupTrigger;
     }
 
     private void GameManager_OnPlayerPickupTrigger(Pickup obj)
     {
-        Debug.Log("Player Picked challenge");
     }
 
     private void Update() {

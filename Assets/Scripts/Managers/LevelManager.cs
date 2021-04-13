@@ -38,7 +38,6 @@ public class LevelManager : Singleton<LevelManager>
         }
         
         _currentLevelName = levelName;
-        Debug.Log(_currentLevelName);        
     }
     
     private void UnloadLevel(string levelName)
